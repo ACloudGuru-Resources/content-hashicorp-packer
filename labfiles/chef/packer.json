@@ -16,7 +16,7 @@
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
-                     "name":  "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+                     "name":  "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
                     "root-device-type": "ebs"
                 },
                 "owners": ["099720109477"],
@@ -34,7 +34,8 @@
         {
             "type": "shell",
             "inline": [
-                "sudo apt-get update -y && sudo apt-get upgrade -y"
+                "sudo apt-get update -y && sudo apt-get upgrade -y",
+                "sudo apt-get install -y apache2-bin apache2-utils ssl-cert curl"
             ]
         }
     ]
