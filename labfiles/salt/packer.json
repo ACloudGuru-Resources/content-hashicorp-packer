@@ -7,6 +7,7 @@
     "builders": [
         {
             "type": "amazon-ebs",
+            "user_data": "#!/bin/sh\necho PubkeyAcceptedKeyTypes=+ssh-rsa >> /etc/ssh/sshd_config; service ssh reload",
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
             "subnet_id": "{{user `aws_subnet_id`}}",
@@ -16,7 +17,7 @@
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
-                    "name": "*ubuntu/images/*ubuntu-hirsute-21.04-amd64-server-*",
+                    "name": "*ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*",
                     "root-device-type": "ebs"
                 },
                 "owners": ["099720109477"],
