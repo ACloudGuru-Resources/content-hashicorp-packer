@@ -1,0 +1,60 @@
+{
+    "variables": {
+        "aws_access_key": "ACCESSKEY",
+        "aws_secret_key": "SECRETKEY",
+        "aws_subnet_id": "SUBNETID"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "subnet_id": "{{user `aws_subnet_id`}}",
+            "region": "us-east-1",
+            "instance_type": "t2.micro",
+            "ami_name": "bookapp-{{timestamp}}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "*ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "security_group_filter": {
+                "filters": {
+                    "tag:Class": "packer"
+                }
+            },
+            "ssh_username": "ubuntu"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update -y && sudo apt-get upgrade -y",
+                "sudo hostnamectl set-hostname packer-web-{{timestamp}}.ec2.internal",
+                "echo '10.0.1.101 puppet puppet.ec2.internal' | sudo tee -a /etc/hosts",
+                "wget https://apt.puppetlabs.com/puppet6-release-bionic.deb",
+                "sudo dpkg -i puppet6-release-bionic.deb",
+                "sudo apt update -y",
+                "sudo apt install puppet-agent -y",
+                "echo 'Defaults secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin' | sudo tee -a /etc/sudoers.d/extra",
+                "bash",
+                "sudo mkdir -p /var/www/html/bookapp",
+                "sudo chown ubuntu:ubuntu /var/www/html/bookapp"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "website/",
+            "destination": "/var/www/html/bookapp/"
+        },
+        {
+            "type": "puppet-server",
+            "puppet_server": "puppet.ec2.internal"
+        }
+    ]
+}
