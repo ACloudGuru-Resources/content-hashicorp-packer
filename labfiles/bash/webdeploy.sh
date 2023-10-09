@@ -1,6 +1,6 @@
-#! /bin/bash
+#!/bin/bash
 
-git clone https://github.com/linuxacademy/content-hashicorp-packer.git /tmp/files
+git clone https://github.com/ACloudGuru-Resources/content-hashicorp-packer.git /tmp/files
 sudo mkdir -p /var/www/html/bookbinge
 sudo mv /tmp/files/sample-website/* /var/www/html/bookbinge/
 sudo chown -R www-data:www-data /var/www/html/bookbinge
