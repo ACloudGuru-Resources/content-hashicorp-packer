@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get update --fix-missing -y
 sudo hostnamectl set-hostname $HOSTNAME
 sudo apt-get install apache2 php7.4 mysql-server-8.0 -y
 sudo systemctl start apache2 mysql
